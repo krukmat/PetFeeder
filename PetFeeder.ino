@@ -1,6 +1,5 @@
 
 #include "PetFeeder.h"
-#include <mqtt.h>
 #include <BlynkSimpleEsp32.h>
 #include <ESP32Servo.h>
 #include <WiFi.h>
@@ -10,6 +9,12 @@
 
 WiFiClient mqttIPClientWifi;
 PubSubClient mqttIPClient( mqttIPClientWifi );
+const String deviceId = "PLANT_1";
+
+#include <mqtt.h>
+
+
+
 
 // You should get Auth Token in the Blynk App.
 // Go to the Project Settings (nut icon).
@@ -30,10 +35,7 @@ void feed_rabbit()
 }
 
 void blynk_setup(){
-  Serial.begin(9600);
   Blynk.begin(auth, ssid, pass);
-  myservo.setPeriodHertz(50); 
-  myservo.attach(servoPin);
 }
 
 void mqttCallback(char* topic, byte* payload, unsigned int length){
@@ -51,7 +53,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length){
     Serial.println("New valid message");
     String parameter = getValue(incoming,';',1);
     Serial.println(parameter);
-    if (parameter == "feed"){
+    if (parameter == "hidrate"){
        Serial.println("feed rabbit method");
        feed_rabbit();
     }
@@ -60,14 +62,26 @@ void mqttCallback(char* topic, byte* payload, unsigned int length){
 
 void setup()
 {
-  blynk_setup();
+  Serial.begin(9600);
+  //blynk_setup();
+  myservo.setPeriodHertz(50); 
+  myservo.attach(servoPin);
+  WiFi.begin(ssid, pass);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected");
+  
   mqttIPClient.setServer(mqtt_ip, mqtt_ip_port);
   mqttIPClient.setCallback(mqttCallback);
-  bootUp(mqttIPClient, mqtt_ip, mqtt_ip_port, mqtt_ip_user, mqtt_ip_password, mqtt_ip_topic_subscribe, mqtt_ip_topic, MQTT_RETRYMS);
+  bootUp(deviceId, &mqttIPClient, mqtt_ip, mqtt_ip_port, mqtt_ip_user, mqtt_ip_password, mqtt_ip_topic_subscribe, mqtt_ip_topic, MQTT_RETRYMS);
 }
 
 void loop()
 {
-  mqttLoop(mqttIPClient, mqtt_ip_user, mqtt_ip_password, mqtt_ip_topic_subscribe, mqtt_ip_topic, MQTT_RETRYMS);
+  mqttLoop(&mqttIPClient, mqtt_ip_user, mqtt_ip_password, mqtt_ip_topic_subscribe, mqtt_ip_topic, MQTT_RETRYMS);
   //Blynk.run();
 }
