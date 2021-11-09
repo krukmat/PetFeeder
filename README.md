@@ -23,7 +23,7 @@ The framework is based on IOTForce stack:
 ## Dependencies:
 ----------------------
        * IOTForce MQTT Library: 
-       [Link to IOTForce](https://github.com/krukmat/IOTForce)
+       * https://github.com/krukmat/IOTForce
 ## More information about the framework: 
 -------------------------------------------------------
-[IOTForce] (https://krukforce.com/our-vision-iotforce/)
+* https://krukforce.com/our-vision-iotforce/
