@@ -39,24 +39,10 @@ void blynk_setup(){
 }
 
 void mqttCallback(char* topic, byte* payload, unsigned int length){
-  String incoming = "";
-  Serial.print("Mensaje recibido desde -> ");
-  Serial.print(topic);
-  Serial.println("");
-  for (int i = 0; i < length; i++) {
-    incoming += (char)payload[i];
-  }
-  incoming.trim();
-  Serial.println("Mensaje -> " + incoming); 
-
-  if (getValue(incoming,';',0) == deviceId && getValue(incoming,';',3) == "MQTT"){
-    Serial.println("New valid message");
-    String parameter = getValue(incoming,';',1);
-    Serial.println(parameter);
-    if (parameter == "hidrate"){
+  String parameter = getCommand(deviceId, topic, payload, length);
+    if (parameter == "execute"){
        Serial.println("feed rabbit method");
        feed_rabbit();
-    }
   }
 }
 
