@@ -22,4 +22,4 @@ The framework is based on IOTForce stack:
 ![schematics](https://github.com/krukmat/PetFeeder/blob/fc20316cbeb6c70a58e8dfbb0077d1ce6ff9302a/FinalDiagram.png)
 ## Dependencies:
 ----------------------
-       * IOTForce MQTT Library: https://github.com/krukmat/IOTForce
+       * IOTForce MQTT Library: [Link to IOTForce](https://github.com/krukmat/IOTForce)
